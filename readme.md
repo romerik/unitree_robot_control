@@ -209,6 +209,115 @@ else:
 - MuJoCo viewer renders at 50Hz for smooth visualization
 - Use the fixed simulator to avoid physics/control synchronization issues
 
+
+## Real Robot High-Level Control
+
+This section contains high-level control scripts for commanding physical Unitree robots using the SportClient API. These scripts are designed for real robot operation and require proper network connectivity to the robot.
+
+### Prerequisites for Real Robot Control
+
+- Physical Unitree robot (Go2, Go2W, or G1)
+- Network connection to the robot
+- Robot in appropriate mode for receiving commands
+- Sufficient clear space around the robot
+
+### Available High-Level Controllers
+
+#### Go2 Quadruped Robot
+
+```bash
+cd real_robot_high_level
+
+# Display all available commands
+python3 go2_high_level.py
+
+# Basic commands
+python3 go2_high_level.py eth0 1          # Stand up
+python3 go2_high_level.py eth0 2          # Stand down
+python3 go2_high_level.py eth0 40         # Hello gesture
+
+# Movement commands
+python3 go2_high_level.py eth0 10         # Move forward 1m
+python3 go2_high_level.py eth0 20 2.5     # Move forward 2.5m
+python3 go2_high_level.py eth0 24 45      # Rotate left 45 degrees
+
+# Fun actions
+python3 go2_high_level.py eth0 44         # Dance (random selection)
+python3 go2_high_level.py eth0 47         # Heart gesture
+```
+
+#### Go2W (Go2 with Wheels)
+
+```bash
+# Go2W-specific commands including wheel control
+...
+```
+
+#### G1 Humanoid Robot
+
+```bash
+# G1-specific humanoid commands
+...
+```
+
+
+### Network Interface Setup
+
+Replace `eth0` with your actual network interface connected to the robot:
+
+```bash
+# Find your network interface
+ip addr show
+
+# Common interface names:
+# eth0, enp3s0 - Ethernet connections
+# wlan0, wlp2s0 - WiFi connections
+```
+
+### Safety Guidelines
+
+⚠️ **Important Safety Notes:**
+
+1. **Clear Area**: Ensure at least 3 meters of clear space around the robot
+2. **Emergency Stop**: Always have the physical emergency stop accessible
+3. **Supervision**: Never leave the robot running unattended
+4. **Stable Surface**: Operate only on flat, stable surfaces unless using terrain-specific modes
+5. **Mode Awareness**: Some advanced commands require switching to AI mode first
+
+### Troubleshooting
+
+#### Common Issues
+
+1. **Connection Failed**: Check network interface name and robot connectivity
+2. **Command Rejected**: Ensure robot is in correct mode (try switching modes)
+3. **Timeout Errors**: Verify network stability and robot responsiveness
+4. **Mode Errors**: Some commands require specific robot modes
+
+#### Error Codes
+
+- `3102`: Service not available or robot not ready
+- `4201`: Command timeout
+- `4202`: Service not initialized
+
+### Network Configuration
+
+For optimal performance, ensure:
+
+```bash
+# Check network connectivity
+ping [robot_ip]
+
+# Verify interface is up
+sudo ip link set [interface] up
+
+# Check routing
+ip route show
+```
+
+### Integration with Simulation
+
+These high-level scripts are designed specifically for real robots and will not work with the simulation environment. For testing movements safely, use the simulation examples first before deploying on physical hardware.
+
 ## License
 
 This project builds upon the Unitree SDK2 and MuJoCo simulator. Please refer to their respective licenses for usage terms.
